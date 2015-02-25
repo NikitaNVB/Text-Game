@@ -25,12 +25,15 @@ public class RainGame {
 		 */
 	
 		int level = 1; //start at lv 1
-		int x=0, y=Zen.getZenHeight() / 2, dx=0, dy=2*level, score=0;
+		final int NUMBER_OF_FAILS = 3; //can fail this many times
 		int failCounter = 0; //counts the amount of times it reaches the bottom
 		boolean reachedBottom = false;
 		String text = "" + (int)(Math.random()*999);
 		long startTime =System.currentTimeMillis();
 		long elapsed = 0L;
+		
+		//initialize variables (game)
+		int x=0, y=Zen.getZenHeight() / 2, dx=0, dy=2*level, score=0;
 		
 		Zen.setFont("Helvetica-64");
 		while (Zen.isRunning()) {
@@ -69,7 +72,8 @@ public class RainGame {
 				failCounter++;
 			}
 			
-			if (failCounter==1)
+			//if the player losses this many times, GAME OVER
+			if (failCounter==NUMBER_OF_FAILS)
 				break; //end the game
 			
 			// Find out what keys the user has been pressing.
