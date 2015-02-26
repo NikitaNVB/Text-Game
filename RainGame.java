@@ -1,3 +1,5 @@
+import java.awt.Image;
+
 //UIUC CS125 FALL 2014 MP. File: RainGame.java, CS125 Project: PairProgramming, Version: 2015-02-23T22:42:52-0600.095355921
 /**
  * @author nbuyev2,schirle2
@@ -12,20 +14,20 @@ public class RainGame {
 	
 		
 		/* Larger numbers at higher levels => done
-		 * Fix flickering
-		 * change color every level => done (has flicker problem, trying to solve it)
-		 * Characters?
-		 * Choosing level
-		 * Difficulty (easy, mid, hard)
+		 * Fix flickering => (has something to do with Zen.flipBuffering() but I'm having problems with it)
+		 * change color every level => done 
+		 * Characters? => work on this next
+		 * Choosing level => don't think we need to bother with this one
+		 * Difficulty (easy, hard) => done
 		 * Life counter (print failCounter) => done
-		 * put images?
+		 * put images? => can't be done
 		 * start at random (x) spots => done
 		 * sometimes it'll go from the bottom to the top
-		 * Print highscores 
+		 * Print highscores (done)
 		 * 
 		 * Known BUGS:
 		 * 1) flickering issue
-		 * 2) when it goes to the next level it will flicker the text color on the whole screen
+		 * 
 		 */
 		
 		//constant variables that can't be changed
@@ -35,7 +37,8 @@ public class RainGame {
 		
 		//variables to declare
 		int[][] highscores = new int[3][NUMBER_OF_TOP_SCORES]; //shows highscores by Score, Level, TextsBeat
-		int level = 1; //start at lv 1
+		int level = 1; //starts levels at lv 1
+		String name = ""; //store user's name
 		int startingSpeed = 0; //the speed you start the game at (should be used to set difficiulties 
 		int amountPlayed = 0; //# of games played
 		boolean stopCounting = false; //stops the level from continuously incrementing
@@ -46,9 +49,127 @@ public class RainGame {
 		long startTime =System.currentTimeMillis();
 		long elapsed = 0L;
 		
-		int x=0;
+		int mouseClickX; //get X coordinate of mouse click
+		int mouseClickY; //get Y coordinate of mouse click
+	
+		
+//Starting screen => input name
+		
+		while (Zen.isRunning()) {
+			int width = 50;
+			int height = 50;
+			
+			//background color of main screen
+			Zen.setColor(38, 104, 128);
+			Zen.fillRect(0, 0, Zen.getZenWidth(), Zen.getZenHeight());
+			
+			mouseClickX = Zen.getMouseClickX(); //get X coordinate
+			mouseClickY = Zen.getMouseClickY(); //get Y coordinate
+
+			
+			//title of the game
+			Zen.setFont("Helvetica-54");
+			Zen.setColor(255,0,0);
+			Zen.drawText("Text",185, 60); 
+			Zen.setColor(0,0,255);
+			Zen.drawText("Game", 310, 60);
+			
+			//creators of the game
+			Zen.setFont("Helvetica-25");
+			Zen.setColor(255,0,255);
+			Zen.drawText("A game by Nikita Buyevich and Matthew Schirle",55, 100);
+			
+			//draw black line
+			Zen.setColor(255,255,255);
+			Zen.drawLine(0, 115, Zen.getZenWidth(),115);
+			
+			Zen.setColor(255,160,30);
+			Zen.setFont("Helvetica-34");
+			Zen.drawText("Hello! What's your name?",120, 200); //prompt user to enter name
+			
+			Zen.setFont("Helvetica-44");
+			Zen.setColor(255,0,0); //change color of inputed name
+			Zen.drawText(":",130, 250); //prompt user to enter name
+			name = Zen.getEditText(); //get users name
+			Zen.drawText(name, 140, 250);
+
+			Zen.setFont("Helvetica-25");
+			Zen.setColor(255,255,255);
+			Zen.drawText("Click inside the box when you're done =>",40, 310); //prompt user to enter name
+			
+			Zen.setColor(96, 202, 89);
+			Zen.fillRect(515, 280, width, height);
+			
+
+			
+			if (((mouseClickX >= 515) && (mouseClickX <= 515+width)) && ((mouseClickY >= 280) && (mouseClickY <= 280+height))){
+				break; //break out of first screen
+			}
+			
+			
+			
+		}
+		
+//Second screen => choose difficulty
+		
+		while (Zen.isRunning()) {
+			//background color of main screen
+			Zen.setColor(38, 104, 128);
+			Zen.fillRect(0, 0, Zen.getZenWidth(), Zen.getZenHeight());
+			
+			mouseClickX = Zen.getMouseClickX(); //get X coordinate
+			mouseClickY = Zen.getMouseClickY(); //get Y coordinate
+
+			
+			//title of the game
+			Zen.setFont("Helvetica-44");
+			Zen.setColor(0,0,255);
+			Zen.drawText("Hello", 200, 60); 
+			Zen.setColor(0,255,0);
+			Zen.drawText(name + "!",315, 60); 
+			Zen.setColor(198,70,70);
+			Zen.drawText("Rules of the Game", 145, 110); 
+		
+			
+			//rules of the game
+			Zen.setFont("Helvetica-20");
+			Zen.drawText("1) Enter the text that appears on screen before it gets to the bottom.", 5, 150); 
+			Zen.drawText("2) Every " + NUMBERS_OF_TEXTS_TO_BEAT + " texts beaten, you move on to the next level.", 5, 190); 
+			Zen.drawText("3) You have " + NUMBER_OF_LIVES + " lives. Meaning if you let it get to the bottom ", 5, 230);
+			Zen.drawText(NUMBER_OF_LIVES + " times, it will be game over.", 29, 250);
+			Zen.drawText("4) There are two difficulties, normal and hard. The hard difficulty ", 5, 290);
+			Zen.drawText("introduces characters.", 29, 310);
+			 
+			//choose difficulty
+			
+			Zen.setColor(0,255,0);
+			Zen.drawText("Easy =>", 110, 400);
+			Zen.fillRect(190, 370, 50, 50);
+			
+			//user chose easy difficulty
+			if (((mouseClickX >= 190) && (mouseClickX <= 190+50)) && ((mouseClickY >= 370) && (mouseClickY <= 370+50))){
+				level = 1; //increments speed by 1
+				break; //break out of first screen
+			}
+			
+			Zen.setColor(255,0,0);
+			Zen.drawText("Hard =>", 330, 400);
+			Zen.fillRect(410, 370, 50, 50);
+			
+			//user chose hard difficulty
+			if (((mouseClickX >= 410) && (mouseClickX <= 410+50)) && ((mouseClickY >= 370) && (mouseClickY <= 370+50))){
+				startingSpeed = 2; //start out at a faster speed
+				break; //break out of first screen
+			}
+			
+			Zen.drawText("X: " + mouseClickX + " Y: " + mouseClickY,0, 440); //coordinates for the location in X and Y
+			
+		}
+		
+		//Zen.drawText("X: " + mouseClickX + " Y: " + mouseClickY,430, 440); //coordinates for the location in X and Y
+		
 		//initialize variables (game)
-		int y=Zen.getZenHeight() / 2, dx=0, dy=startingSpeed+level, score=0;
+		int y=Zen.getZenHeight() / 2, dx=0, dy=startingSpeed+level, score=0, x=0;
 		
 		Zen.setFont("Helvetica-64");
 		while (Zen.isRunning()) {
@@ -94,6 +215,7 @@ public class RainGame {
 			//every certain amount of texts beaten, increment the level
 			if ((numberWon == (NUMBERS_OF_TEXTS_TO_BEAT*level)) && !stopCounting){
 				level++; //go to the next level
+				Zen.setColor((30*level)%255, (40*level)%255, (50*level)%255); //randomize color depending on level
 				Zen.fillRect(0, 0, Zen.getZenWidth(), Zen.getZenHeight());
 				stopCounting = true; //stop from incrementing levels on a loop
 			}
@@ -127,8 +249,8 @@ public class RainGame {
 					text = text.substring(1,text.length()); // all except first character
 			}
 			
-
-			Zen.sleep(90-level);// sleep for 90 milliseconds
+			
+			Zen.sleep(90-level);// sleep for 90 milliseconds and get less and less with every level
 
 		}
 		
@@ -150,10 +272,11 @@ public class RainGame {
 		Zen.drawText("Game Over",Zen.getZenWidth()/4, Zen.getZenHeight()/5); //print "Game Over"
 		Zen.setColor(146, 27, 27); //color of highscores
 		Zen.setFont("Helvetica-28");
-		Zen.drawText("Highscore(s):",5, Zen.getZenHeight()/3); //print "Game Over"
+		Zen.drawText(name + ", here are your highscores!",5, Zen.getZenHeight()/3); //print "Game Over"
 		Zen.setFont("Helvetica-18");
 		Zen.drawText(amountPlayed + ". " + "Highest Score: " + highscores[0][0] + " | " + "Highest Streak: " + highscores[1][0] + " | " + "Highest Level Reached: " + highscores[2][0],5,Zen.getZenHeight() / 2); //print "Game Over"
 		
+
 	}
 
 }
